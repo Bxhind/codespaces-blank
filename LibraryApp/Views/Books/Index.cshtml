@@ -1,0 +1,77 @@
+@model IEnumerable<LibraryApp.Models.Book>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<h1>Books</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Add New Book</a>
+    <a class="btn btn-secondary" id="refreshBtn">Refresh list (AJAX)</a>
+</p>
+
+@using (Html.BeginForm("ByAuthor", "Books", FormMethod.Get))
+{
+    <div class="input-group mb-3" style="max-width:400px;">
+        @Html.TextBox("author", null, new { @class = "form-control", placeholder = "Filter by author" })
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+}
+
+<table class="table table-striped" id="booksTable">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Quantity</th>
+            <th>Available</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var book in Model)
+    {
+        <tr>
+            <td>@book.Title</td>
+            <td>@book.Author</td>
+            <td>@book.Year</td>
+            <td>@book.Quantity</td>
+            <td>@(book.Available ? "Yes" : "No")</td>
+            <td>
+                <a class="btn btn-sm btn-info" asp-action="Edit" asp-route-id="@book.Id">Edit</a>
+                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@book.Id" onclick="return confirm('Delete this book?');">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(function() {
+            $('#refreshBtn').click(function() {
+                $.getJSON('@Url.Action("GetBooksJson")', function(data) {
+                    var tbody = $('#booksTable tbody');
+                    tbody.empty();
+                    $.each(data, function(i, book) {
+                        var available = book.available ? 'Yes' : 'No';
+                        var row = '<tr>' +
+                                  '<td>' + book.title + '</td>' +
+                                  '<td>' + book.author + '</td>' +
+                                  '<td>' + book.year + '</td>' +
+                                  '<td>' + book.quantity + '</td>' +
+                                  '<td>' + available + '</td>' +
+                                  '<td>' +
+                                    '<a class="btn btn-sm btn-info" href="/books/edit/' + book.id + '">Edit</a> ' +
+                                    '<a class="btn btn-sm btn-danger" href="/books/delete/' + book.id + '" onclick="return confirm(\'Delete this book?\');">Delete</a>' +
+                                  '</td>' +
+                                  '</tr>';
+                        tbody.append(row);
+                    });
+                });
+            });
+        });
+    </script>
+}

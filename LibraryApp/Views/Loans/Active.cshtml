@@ -1,0 +1,35 @@
+@model IEnumerable<LibraryApp.Models.Loan>
+
+@{
+    ViewData["Title"] = "Active Loans";
+}
+
+<h1>Active Loans</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">New Loan</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Reader</th>
+            <th>Borrowed</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var loan in Model)
+    {
+        <tr>
+            <td>@loan.Book.Title</td>
+            <td>@loan.Reader.Name</td>
+            <td>@loan.BorrowDate.ToShortDateString()</td>
+            <td>
+                <a class="btn btn-sm btn-success" asp-action="Return" asp-route-id="@loan.Id">Return</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

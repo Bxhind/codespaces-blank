@@ -1,0 +1,26 @@
+@model LibraryApp.Models.Loan
+
+@{
+    ViewData["Title"] = "New Loan";
+}
+
+<h1>Issue Book</h1>
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        @Html.Label("Book")
+        @Html.DropDownList("bookId", new SelectList(ViewBag.Books, "Id", "Title"), "-- choose --", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.Label("Reader")
+        @Html.DropDownList("readerId", new SelectList(ViewBag.Readers, "Id", "Name"), "-- choose --", new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-primary">Issue</button>
+    <a asp-action="Active" class="btn btn-secondary">Cancel</a>
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info mt-2">@TempData["Message"]</div>
+}

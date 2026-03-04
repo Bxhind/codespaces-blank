@@ -1,0 +1,34 @@
+@model IEnumerable<LibraryApp.Models.Reader>
+
+@{
+    ViewData["Title"] = "Readers";
+}
+
+<h1>Readers</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Add New Reader</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var r in Model)
+    {
+        <tr>
+            <td>@r.Name</td>
+            <td>@r.Phone</td>
+            <td>
+                <a class="btn btn-sm btn-info" asp-action="History" asp-route-id="@r.Id">History</a>
+                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@r.Id" onclick="return confirm('Delete reader?');">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
